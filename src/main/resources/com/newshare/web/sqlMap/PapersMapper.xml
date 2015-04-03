@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="papers">
+	<resultMap type="papers" id="papersResultMap">
+		<result column="papernum" property="paperNum" />
+		<result column="makingdate" property="makingDate" />
+		<result column="recommendnum" property="recommendNum" />
+		<result column="subscriptionchk" property="subscriptionChk" />
+	</resultMap>
+	<resultMap type="paperpages" id="paperPagesResultMap">
+		<result column="papernum" property="paperNum" />
+		<result column="frameinform" property="frameInform"/>
+	</resultMap>
+	<resultMap type="wallboard" id="wallBoardResultMap">
+		<result column="boardnum" property="boardNum"/>
+		<result column="papernum" property="paperNum"/>
+		<result column="writingdate" property="writingDate"/>
+	</resultMap>
+	
+	<!-- myStand paper delete -->
+	<delete id="deletePaper" parameterType="papers">
+		delete from papers 
+		where papernum = #{paperNum} and email = #{email}
+	</delete>
+	
+	<insert id="insertPaper" parameterType="papers">
+		insert into papers (email, title, makingdate, recommendnum, subscriptionchk) values
+		(#{email} , #{title} , sys_date, 0, 0)
+	</insert>
+	
+	<select id="getPaperNum" resultType="int">
+		select last_insert_id()
+	</select>
+	
+	<insert id="savePosition" parameterType="paperpages">
+		insert into paperpages values(#{page}, #{paperNum}, #{frameInform})
+	</insert>
+	
+	<!-- 인기 신문 보기 (구독순) -->
+	<select id="email" resultMap="papersResultMap">
+		SELECT 
+			papernum, 
+			email, 
+			title,  
+			makingdate, 
+			followercount
+		FROM 
+			Papers, SubscriberNum
+		WHERE
+			email=distributor
+		ORDER BY followercount desc FOR ORDERBY_NUM() between 1 and 5;
+	</select>
+	
+	<!-- 인기 신문 보기 (추천순) -->
+	<select id="recommendPaper" resultMap="papersResultMap">
+		SELECT papernum, email , title, recommendnum , makingdate
+		FROM Papers 
+		order by recommendnum desc FOR ORDERBY_NUM() between 1 and 5
+	</select>
+	
+	<!-- 신문의 모든 페이지 들고 오기 -->
+	<select id="getPaperPages" parameterType="int" resultMap="paperPagesResultMap">
+		select * from paperpages where papernum = #{papernum}
+	</select>
+	
+	<!-- 신문 가져오기 -->
+	<select id="getPaper" parameterType="int" resultMap="papersResultMap">
+		select * from papers where papernum = #{papernum}
+	</select>
+	
+	<!-- 총 내 신문 개수 구하기 -->
+	<select id="totalPapers" parameterType="String" resultType="int">
+		select count(*) from papers where email = #{email}
+	</select>
+	
+	<!-- 총 유저 신문 개수 구하기 -->
+	<select id="totalUserPapers" parameterType="String" resultType="int">
+		select count(*) from papers where email=#{email} and subscriptionchk = 1
+	</select>
+	
+	<!-- 신문 공개 유무 설정하기 -->
+	<insert id="setOpen" parameterType="hashMap">
+		update papers set subscriptionchk=#{open} where papernum = #{papernum}
+	</insert>
+	
+	<!-- 페이지별 내 신문 가져오기 -->
+	<select id="eachPagePapers" parameterType="hashMap" resultMap="papersResultMap">
+		select * from (
+			select rownum r, a.* from 
+				(select * from papers where email=#{email} order by paperNum desc) a)
+		where r between #{firstNum} and #{lastNum}
+	</select>
+	
+	<!-- 페이지별 유저 신문 가져오기 -->
+	<select id="eachUserPagePapers" parameterType="hashMap" resultMap="papersResultMap">
+		select * from (
+			select rownum r, a.* from 
+				(select * from papers where email=#{email} and subscriptionchk=1 order by paperNum desc) a)
+		where r between #{firstNum} and #{lastNum}
+	</select>
+	
+	<!-- 총 내가 구독하는 신문 개수 구하기 -->
+	<select id="totalNeighborPapers" parameterType="String" resultType="int">
+		select count(*)
+		from papers
+		where email in (select distributor
+						from subscriptions
+						where subscriber = #{email} and subscriptionChk=1)
+	</select>
+	
+	<!-- 페이지별 내가 구독하는 신문 가져오기 -->
+	<select id="eachNeighborPagePapers" parameterType="hashMap" resultMap="papersResultMap">
+		select * from (
+			select rownum r, a.* from 
+				(select * from papers where subscriptionChk=1 and email in
+					(select distributor from subscriptions where subscriber = #{email}) 
+					order by paperNum desc) a)
+		where r between #{firstNum} and #{lastNum}
+	</select>
+	
+	<!-- 페이퍼 info update -->
+	<update id="updateInfo" parameterType="hashMap">
+		update papers set info=#{info} where papernum = #{paperNum}
+	</update>
+	
+	<!-- 페이퍼 추천 -->
+	<update id="likePaper" parameterType="int">
+		update papers set recommendnum = recommendnum + 1 where papernum = #{paperNum}
+	</update>
+	
+	<!-- 신문 검색 -->
+	<select id="paperSearch" parameterType="String" resultMap="papersResultMap">
+		select *
+		from papers
+		WHERE subscriptionchk='1' AND 
+		(email like concat('%', #{keyword} , '%') OR title like concat('%', #{keyword} , '%'));
+	</select>
+	
+	<!-- wallboard 리스트 가져오기 -->
+	<select id="getWallBoard" parameterType="String" resultMap="papersResultMap">
+		select p.* from papers p, wallboard w where p.papernum = w.papernum and w.writingdate >= to_date (#{writingdate}) order by w.boardnum desc 
+	</select>
+	
+	
+	<insert id="insertWall" parameterType="wallboard">
+		insert into wallboard (papernum, comment, writingdate) values (#{paperNum}, #{comment}, sysdate)
+	</insert>
+	
+	<!-- 게시글 공개유무 변환하기 -->
+	<update id="changeOnOff" parameterType="hashMap">
+		update papers set subscriptionchk=#{chk} where papernum = #{paperNum}
+	</update>
+</mapper>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="scraps">
+	<resultMap type="scraps" id="scrapsResultMap">
+		<result column="scrapnum" property="scrapNum" />
+		<result column="articleurl" property="articleUrl" />
+		<result column="scrapdate" property="scrapDate" />
+	</resultMap>
+	
+	<!-- 각 ID로 로그인 하여 스크랩 할 때, 중복 유/무 체크 -->
+	<select id="checkScrap" parameterType="scraps" resultMap="scrapsResultMap">
+		select email, articleUrl 
+		from scraps
+		where email = #{email} and articleUrl = #{articleUrl}
+	</select>
+
+	<!-- 스크랩하기 -->
+	<insert id="insertScrap" parameterType="scraps">
+		insert into scraps(email , articleUrl, scrapDate) values
+		(#{email} , #{articleUrl}, sysdate)
+	</insert>
+	
+	<!-- 스크랩 삭제 -->
+	<delete id="deleteScrap" parameterType="scraps">
+		delete from scraps 
+		where email = #{email} and articleUrl = #{articleUrl}
+	</delete>
+</mapper>

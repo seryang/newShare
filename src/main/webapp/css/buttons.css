@@ -1,0 +1,168 @@
+@CHARSET "UTF-8";
+
+
+html{
+     margin:0px;
+     padding :0px;
+}
+ 
+body{
+     margin:0px;
+     padding :0px;
+}
+
+#wrapper {
+	position : relative;
+}
+
+/* 
+#frametext {
+	font-size : 20pt;
+} */
+#framebt {
+	width : 78%;
+	/*background: #fff url(../img/grid_grey.jpg);*/
+}
+
+#frameCan {
+	background-image : url("../img/paperback.png");
+	box-shadow: 0px 1px 1px rgba(0,0,0,.35), 0px 0px 1px rgba(0,0,0,.1);
+}
+
+
+#buttons {
+	position:absolute; top:25%; left:4%;
+}
+
+#scraps {
+	position : absolute;
+	top : 140px;
+	left : 900px;
+	width : 22%;
+	float : left;
+}
+
+#papertitle {
+	position : absolute;
+	top : 10%;
+	text-align : center;
+}
+
+#paperintitle {
+	position : absolute;
+	top : 8%;
+	text-align : center;
+}
+
+.articleSpace {
+	position : absolute;
+	top : 7%;
+	height : 800px;
+	width : 860px;
+}
+/* 
+#sizedspace {
+	position : relative;
+	height : 20%;
+	widht : 100%;
+} */
+.inbox {
+	background-color : transparent;
+	z-index : 3;
+}
+.pagebox {
+	weight : 10%;
+	float : left;
+}
+.scrapbox { 
+	/* -webkit-transition: all 0.5s ease-in-out;
+	-moz-transition: all 0.5s ease-in-out;
+	-o-transition: all 0.5s ease-in-out;
+	-ms-transition: all 0.5s ease-in-out;
+	transition: all 0.5s ease-in-out;
+	padding: 10px; */
+	height : 40px;
+	line-height: 140%;
+	
+	overflow : hidden;
+	text-overflow:ellipsis;
+	/*border:1px solid;
+	padding:10px; 
+	margin-bottom : 3px;
+	text-overflow:ellipsis;
+	 overflow : hidden;
+	text-overflow:ellipsis;
+	white-space:nowrap;
+	word-wrap:normal */
+}
+
+.lfir {
+	line-height: 90px;
+}
+
+
+.lsec {
+	line-height: 90px;
+}
+
+.lthi {
+	line-height: 90px;
+}
+
+.lfou {
+	line-height: 90px;
+}
+
+.lfif {
+	line-height: 90px;
+}
+
+.lsix {
+	line-height: 90px;
+}
+
+.lsev {
+	line-height: 90px;
+}
+
+.wfir {
+  	float : left;
+  	width : 13px;
+  	margin-right : 120px;
+}
+
+.wsec {
+	float : left;
+	width : 13px;
+  	margin-right : 120px;
+}
+
+
+.wthi {
+	float : left;
+	width : 13px;
+  	margin-right : 120px;
+}
+
+.wfou {
+	float : left;
+	width : 13px;
+	margin-right : 120px;
+}
+
+.wfif {
+	float : left; 
+	width : 13px;
+  	margin-right : 120px;
+}
+
+.wsix {
+	float : left;
+	width : 13px;
+	margin-right : 120px;
+}
+
+.wsev {
+	float : left;
+	width : 13px;
+}

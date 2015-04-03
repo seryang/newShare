@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<bean id="propertyPlaceholderConfigurer"
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="locations">
+			<value>/WEB-INF/db/dbConnect.properties</value>
+		</property>
+	</bean>
+
+	<!-- DB 연동하기 -->
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource"
+		destroy-method="close">
+		<property name="driverClassName" value="${driver}" />
+		<property name="url" value="${url}" />
+		<property name="username" value="${username}" />
+		<property name="password" value="${userpass}" />
+	</bean>
+
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="mapperLocations" value="classpath:com/newshare/web/sqlMap/*.xml" />
+		<property name="configLocation" value="/WEB-INF/db/sqlMap-config.xml" />
+		<property name="transactionFactory">
+			<bean
+				class="org.apache.ibatis.transaction.managed.ManagedTransactionFactory" />
+		</property>
+	</bean>
+
+	<bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate">
+		<constructor-arg index="0" ref="sqlSessionFactory" />
+	</bean>
+
+	<!-- Members Bean 생성 -->
+	<bean id="meDao" class="com.newshare.web.model.dao.MembersDAOImpl"
+		p:sqlSessionFactory-ref="sqlSessionFactory" />
+	<bean id="meService" class="com.newshare.web.service.MembersService">
+		<property name="membersDao" ref="meDao" />
+	</bean>
+
+
+	<!-- Articles Bean 생성 -->
+	<bean id="arDao" class="com.newshare.web.model.dao.ArticlesDAOImpl"
+		p:sqlSessionFactory-ref="sqlSessionFactory" />
+	<bean id="arService" class="com.newshare.web.service.ArticlesService">
+		<property name="articlesDao" ref="arDao" />
+	</bean>
+
+	<!-- MemberCounts Bean 생성 -->
+	<bean id="mcDao" class="com.newshare.web.model.dao.MemberCountsDAOImpl"
+		p:sqlSessionFactory-ref="sqlSessionFactory" />
+	<bean id="mcService" class="com.newshare.web.service.MemberCountsService">
+		<property name="memberCountsDao" ref="mcDao" />
+	</bean>
+
+	<!-- Press Bean 생성 -->
+	<bean id="prService" class="com.newshare.web.service.PressService" />
+
+	<!-- Papers Bean 생성 -->
+	<bean id="paDao" class="com.newshare.web.model.dao.PapersDAOImpl"
+		p:sqlSessionFactory-ref="sqlSessionFactory" />
+	<bean id="paService" class="com.newshare.web.service.PapersService">
+		<property name="papersDao" ref="paDao" />
+	</bean>
+
+	<!-- Popular Bean 생성 -->
+	<bean id="popDao" class="com.newshare.web.model.dao.PopularDAOImpl"
+		p:sqlSessionFactory-ref="sqlSessionFactory" />
+	<bean id="popService" class="com.newshare.web.service.PopularService">
+		<property name="popularDao" ref="popDao" />
+	</bean>
+
+	<!-- Portal Bean 생성 -->
+	<bean id="poService" class="com.newshare.web.service.PortalService" />
+
+	<!-- Stand Bean 생성 -->
+	<bean id="stDao" class="com.newshare.web.model.dao.StandsDAOImpl"
+		p:sqlSessionFactory-ref="sqlSessionFactory" />
+	<bean id="stService" class="com.newshare.web.service.StandsService">
+		<property name="standsDao" ref="stDao" />
+	</bean>
+
+	<!-- WallBoard Bean 생성 -->
+	<bean id="waDao" class="com.newshare.web.model.dao.WallBoardDAOImpl"
+		p:sqlSessionFactory-ref="sqlSessionFactory" />
+	<bean id="waService" class="com.newshare.web.service.WallBoardService">
+		<property name="wallBoardDao" ref="waDao" />
+	</bean>
+
+	<!-- Subscriptions Bean 생성 -->
+	<bean id="suDao" class="com.newshare.web.model.dao.SubscriptionsDAOImpl"
+		p:sqlSessionFactory-ref="sqlSessionFactory" />
+	<bean id="suService" class="com.newshare.web.service.SubscriptionsService">
+		<property name="subscriptionsDao" ref="suDao" />
+	</bean>
+
+	<!-- Search Bean 생성 -->
+	<bean id="seService" class="com.newshare.web.service.SearchService" />
+
+	<!-- JSON View 등록 -->
+	<bean id="jsonView" class="org.springframework.web.servlet.view.json.MappingJacksonJsonView">
+		<property name="contentType" value="text/html;charset=UTF-8" />
+	</bean>
+
+	<!-- BeanNameViewResolver 등록 -->
+	<bean id="viewResolver" class="org.springframework.web.servlet.view.BeanNameViewResolver">
+		<property name="order" value="0" />
+	</bean>
+</beans>

@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="articles">
+	<resultMap type="articles" id="articlesResultMap">
+		<result column="articleurl" property="articleUrl" />
+		<result column="writingdate" property="writingDate" />
+		<result column="articlesection" property="articleSection" />
+		<result column="scrapcnt" property="scrapCnt" />
+	</resultMap>
+
+	<!-- 이미 있는 기사인지 확인 -->
+	<select id="checkArticle" parameterType="String" resultType="String">
+	select articleurl
+	from articles
+	where articleurl = #{articleUrl}
+	</select>
+	
+	<!-- 이미 있는 기사일때 scrapCnt 증가 -->
+	<update id="updateCount" parameterType="String">
+	update articles set scrapcnt = scrapcnt + 1 
+	where articleurl = #{articleUrl}
+	</update>
+
+	<!-- 스크랩할 기사가 article DB에 없을 때 저장하기 -->
+	<insert id="insertArticle" parameterType="articles">
+	insert into articles 
+	(articleurl, title, description, image, content, writingdate, press, articlesection)
+	values (#{articleUrl}, #{title}, #{description}, #{image}, #{content}, #{writingDate}, #{press}, #{articleSection})
+	</insert>
+	
+	<!-- 스크랩한 기사 하나 보기 -->
+	<select id="scrapView" parameterType="String" resultMap="articlesResultMap">
+	select * from articles
+	where articleurl = #{articleUrl}
+	</select>
+	
+	<!-- My Scrap List 보기 -->
+	<select id="scrapList" parameterType="String" resultMap="articlesResultMap">
+	SELECT articles.* FROM articles , scraps 
+	WHERE articles.articleurl = scraps.articleurl AND email= #{email}
+	ORDER BY scrapnum desc;
+	</select>
+	
+	<!-- 인기 기사 보기 (스크랩순) -->
+	<select id="popularArticle" parameterType="int" resultMap="articlesResultMap">
+	SELECT
+		* 
+	FROM
+		articles
+	<where>
+		<if test="value == 0">	
+			(sysdate - #{day}) >= TO_DATE(SUBSTRING(writingdate,1,10),'yyyy-mm-dd')
+		</if>
+		<if test="value == 7">
+			TO_DATE(SUBSTRING(writingdate,1,10),'yyyy-mm-dd') >= (sysdate - #{day})
+ 		</if>
+		<if test="value == -1">
+			TO_DATE(SUBSTRING(writingdate,1,10),'yyyy-mm-dd') >= add_months(sysdate,#{day})
+		</if>	    
+	</where>
+	ORDER BY
+		scrapcnt DESC 
+	FOR ORDERBY_NUM() 
+	BETWEEN 
+		1 AND 5;
+	</select>
+	
+	<!-- 관심있는 기사 List 가져오기 ( 회원 가입 시 체크했던 관심도를 기준으로 뽑아오기 ) -->
+	<select id="interestArticle" parameterType="String" resultMap="articlesResultMap">
+	SELECT articleUrl,title,description,image,writingDate,press,articleSection,scrapCnt
+	FROM articles
+	WHERE articleurl in(SELECT articleurl
+	               FROM articles a, MEMBERS m
+	               WHERE m.email= #{email}
+	                  AND a.articlesection=(IF(m.politicsints=1,'정치',null))
+	                  AND ROWNUM BETWEEN 1 AND 5
+	                  AND TO_DATE(SUBSTRING(writingdate,1,10),'yyyy-mm-dd') >= (sysdate - 7)
+	               ORDER BY ScrapCNT desc)
+	      OR articleurl in(SELECT articleurl
+	               FROM articles a, MEMBERS m
+	               WHERE m.email=#{email}
+	                  AND a.articlesection=(IF(m.economyints=1,'경제',null))
+	                  AND ROWNUM BETWEEN 1 AND 5
+	                  AND TO_DATE(SUBSTRING(writingdate,1,10),'yyyy-mm-dd') >= (sysdate - 7)
+	               ORDER BY ScrapCNT desc)
+	      OR articleurl in(SELECT articleurl
+	               FROM articles a, MEMBERS m
+	               WHERE m.email=#{email}
+	                  AND a.articlesection=(IF(m.societyints=1,'사회',null))
+	                  AND ROWNUM BETWEEN 1 AND 5
+	                  AND TO_DATE(SUBSTRING(writingdate,1,10),'yyyy-mm-dd') >= (sysdate - 7)
+	               ORDER BY ScrapCNT desc)
+	      OR articleurl in(SELECT articleurl
+	               FROM articles a, MEMBERS m
+	               WHERE m.email=#{email}
+	                  AND a.articlesection=(IF(m.lifecultureints=1,'생활/문화',null))
+	                  AND ROWNUM BETWEEN 1 AND 5
+	                  AND TO_DATE(SUBSTRING(writingdate,1,10),'yyyy-mm-dd') >= (sysdate - 7)
+	               ORDER BY ScrapCNT desc)
+	      OR articleurl in(SELECT articleurl
+	               FROM articles a, MEMBERS m
+	               WHERE m.email=#{email}
+	                  AND a.articlesection=(IF(m.worldints=1,'세계',null))
+	                  AND ROWNUM BETWEEN 1 AND 5
+	                  AND TO_DATE(SUBSTRING(writingdate,1,10),'yyyy-mm-dd') >= (sysdate - 7)
+	               ORDER BY ScrapCNT desc)
+	      OR articleurl in(SELECT articleurl
+	               FROM articles a, MEMBERS m
+	               WHERE m.email=#{email}
+	                  AND a.articlesection=(IF(m.itscienceints=1,'IT/과학',null))
+	                  AND ROWNUM BETWEEN 1 AND 5
+	                  AND TO_DATE(SUBSTRING(writingdate,1,10),'yyyy-mm-dd') >= (sysdate - 7)
+	               ORDER BY ScrapCNT desc)
+	      OR articleurl in(SELECT articleurl
+	               FROM articles a, MEMBERS m
+	               WHERE m.email=#{email}
+	                  AND a.articlesection=(IF(m.entertainmentints=1,'연예',null))
+	                  AND ROWNUM BETWEEN 1 AND 5
+	                  AND TO_DATE(SUBSTRING(writingdate,1,10),'yyyy-mm-dd') >= (sysdate - 7)
+	               ORDER BY ScrapCNT desc)
+	      OR articleurl in(SELECT articleurl
+	               FROM articles a, MEMBERS m
+	               WHERE m.email=#{email}
+	                  AND a.articlesection=(IF(m.sportsints=1,'sports',null))
+	                  AND ROWNUM BETWEEN 1 AND 5
+	                  AND TO_DATE(SUBSTRING(writingdate,1,10),'yyyy-mm-dd') >= (sysdate - 7)
+	               ORDER BY ScrapCNT desc)
+	ORDER BY articlesection DESC, scrapcnt DESC;
+	</select>
+	
+	<!-- 내가 스크랩한 언론사 리스트 -->
+	<select id="scrapPressList" parameterType="String" resultMap="articlesResultMap">
+		SELECT DISTINCT press 
+		FROM articles , scraps 
+		WHERE articles.articleurl = scraps.articleurl AND email= #{email}
+	</select>
+	
+	<!-- 내가 스크랩한 언론사 리스트 -->
+	<select id="scrapSectionList" parameterType="String" resultMap="articlesResultMap">
+		SELECT DISTINCT articleSection 
+		FROM articles , scraps 
+		WHERE articles.articleurl = scraps.articleurl AND email= #{email}
+	</select>
+	
+	<!-- url주고 article 빼오기 -->
+	<select id="getArticle" parameterType="String" resultMap="articlesResultMap">
+		select * from articles where articleurl = #{url}
+	</select>
+
+	<!-- 스크랩 테이블 보기(email 오름차순) -->
+	<select id="scrapsTableList" resultMap="scraps.scrapsResultMap">
+		SELECT email, articleurl
+		FROM scraps
+		ORDER BY email asc
+	</select>
+	
+	<!-- 스크랩 테이블에서 Email List 가져오기 -->
+	<select id="scrapEmailList" resultType="String">
+		SELECT DISTINCT email
+		FROM scraps
+		ORDER BY email asc
+		<!-- 스크랩 테이블에서 Email List 가져오기(랜덤으로 5명의 회원만)
+		SELECT email
+		FROM (SELECT  email
+				FROM (SELECT email
+						FROM (SELECT DISTINCT email
+									FROM scraps
+									WHERE TO_DATE(SUBSTRING(scrapdate,1,10),'mm/dd/yyyy') >= (sysdate - 5))
+						ORDER BY RANDOM() LIMIT 4) )
+		ORDER BY email asc; -->
+	</select>
+	
+	<!-- 스크랩 테이블에서 articleUrl List 가져오기 -->
+	<select id="scrapUrlList" resultType="String">
+		SELECT DISTINCT articleurl
+		FROM scraps
+		ORDER BY articleurl asc
+		<!-- 스크랩 테이블에서 articleUrl List 가져오기(최근 5일이내 스크랩한 것만)
+		SELECT DISTINCT articleurl
+		FROM scraps
+		WHERE TO_DATE(SUBSTRING(scrapdate,1,10),'mm/dd/yyyy') >= (sysdate - 5)
+		ORDER BY articleurl asc; -->
+	</select>
+</mapper>

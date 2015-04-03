@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="membercounts">
+	<resultMap type="membercounts" id="countsResultMap">
+		<result column="politicscnt" property="politicsCnt" />
+		<result column="economycnt" property="economyCnt" />
+		<result column="societycnt" property="societyCnt" />
+		<result column="lifeculturecnt" property="lifeCultureCnt" />
+		<result column="worldcnt" property="worldCnt" />
+		<result column="itsciencecnt" property="itScienceCnt" />
+		<result column="entertainmentcnt" property="entertainmentCnt" />
+		<result column="sportscnt" property="sportsCnt" />
+	</resultMap>
+
+	<!-- 이미 있는 기사일때 scrapCnt 증가 -->
+	<!-- 회원의 카운트 정보 초기화 -->
+	<insert id="insertCounts" parameterType="String">
+		insert into membercounts(email) values (#{email})
+	</insert>
+	
+	<update id="politicsCount" parameterType="String">
+		update membercounts set politicscnt = politicscnt + 1 
+		where email = #{email}
+	</update>
+	
+	<update id="economyCount" parameterType="String">
+		update membercounts set economycnt = economycnt + 1 
+		where email = #{email}
+	</update>
+	
+	<update id="societyCount" parameterType="String">
+		update membercounts set societycnt = societycnt + 1 
+		where email = #{email}
+	</update>
+	
+	<update id="lifecultureCount" parameterType="String">
+		update membercounts set lifeculturecnt = lifeculturecnt + 1 
+		where email = #{email}
+	</update>
+	
+	<update id="worldCount" parameterType="String">
+		update membercounts set worldcnt = worldcnt + 1 
+		where email = #{email}
+	</update>
+	
+	<update id="itscienceCount" parameterType="String">
+		update membercounts set itsciencecnt = itsciencecnt + 1 
+		where email = #{email}
+	</update>
+	
+	<update id="entertainmentCount" parameterType="String">
+		update membercounts set entertainmentcnt = entertainmentcnt + 1 
+		where email = #{email}
+	</update>
+	
+	<update id="sportsCount" parameterType="String">
+		update membercounts set sportscnt = sportscnt + 1 
+		where email = #{email}
+	</update>
+	
+	<!-- 분야별 카운트 가져오기 -->
+	<select id="selectCount" parameterType="String" resultMap="countsResultMap">
+	select *
+	from memberCounts
+	where email = #{email}
+	</select>
+</mapper>

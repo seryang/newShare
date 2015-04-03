@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="subscriptions">
+	<resultMap type="subscriptions" id="subscriptionsResultMap">
+		<result column="subscriptiondate" property="subscriptionDate" />
+	</resultMap>
+	
+	<!-- 인기 에디터 보기 (구독순) -->
+	<select id="distributor" resultMap="subscriptionsResultMap">
+		SELECT distributor, COUNT(*) as followerCount
+		FROM subscriptions 
+	 	GROUP BY distributor
+	 	Having GROUPBY_NUM() BETWEEN 1 AND 5 
+		ORDER BY followerCount DESC
+	</select>
+	
+	<!-- 인기 에디터 보기 (추천순) -->
+	<select id="recommendEditor" resultMap="subscriptionsResultMap">
+		SELECT email as distributor , SUM(recommendnum) as followerCount 
+		FROM Papers 
+		GROUP BY email
+		order by followerCount DESC FOR ORDERBY_NUM() between 1 and 5;
+	</select>
+	
+	<!-- 구독 체크 -->
+	<select id="checkSubscription" parameterType="subscriptions" resultMap="subscriptionsResultMap">
+		select subscriber , distributor from subscriptions 
+		where subscriber = #{subscriber} AND distributor = #{distributor}
+	</select>
+	
+	<!-- 구독하기 -->
+	<insert id="insertSubscription" parameterType="hashMap">
+		insert into subscriptions(subscriber, distributor, subscriptiondate) values
+		(#{subscriber} , #{distributor}, sysdate)
+	</insert>
+	
+	<!-- 구독 취소하기 -->
+	<delete id="cancleSubscription" parameterType="hashMap">
+		delete from subscriptions
+		where subscriber = #{subscriber} AND distributor=#{distributor}
+	</delete>
+	
+	<!-- 내가 구독하는 회원 리스트 뽑아오기 -->
+	<select id="distributorList" parameterType="String" resultMap="subscriptionsResultMap">
+		select distributor from subscriptions
+		where subscriber = #{email}
+	</select>
+</mapper>
