@@ -1,7 +1,15 @@
 NAVER Software Membership 5th Final Project
 
-> Project Name - newShare [newS + Share]
+> Project Name 
 
-> Account for newShare - Edit your Paper, Edit your Agenda !
+- newShare [newS + Share] Web Service
 
-> Project Member - Choe Seryang, Park Daehyun, Park Hosang, Lee Hansol
+> Account for newShare 
+
+- Edit your Paper, Edit your Agenda !
+
+- You can see a various articles. Also, you can make a newspaper only for you. 
+
+> Project Member 
+
+- Choe Seryang, Park Daehyun, Park Hosang, Lee Hansol
