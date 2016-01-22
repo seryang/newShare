@@ -17,6 +17,6 @@ newShare [newS + Share] Web Service
 
 - Choe Seryang, Park Daehyun, Park Hosang, Lee Hansol
 
-> newShare Portpolio
+> Portpolio
 
 - http://bit.ly/1JyHg1U
