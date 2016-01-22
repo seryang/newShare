@@ -1,10 +1,7 @@
-NAVER corp.
+newShare [newS + Share] Web Service
 
-- 'Software Membership 5th' Final Project
 
-> Project Name 
-
-- newShare [newS + Share] Web Service
+> NAVER corp. 'Software Membership 5th' Final Project
 
 > Account for newShare 
 
