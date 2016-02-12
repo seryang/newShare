@@ -1,9 +1,8 @@
 newShare [newS + Share] Web Service
 
+- NAVER corp. 'Software Membership 5th' Final Project
 
-> NAVER corp. 'Software Membership 5th' Final Project
-
-> Account for newShare 
+> Account for Project 
 
 - Edit your Paper, Edit your Agenda !
 
