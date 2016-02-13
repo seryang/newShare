@@ -2,11 +2,11 @@ newShare [newS + Share] Web Service
 
 - NAVER corp. 'Software Membership 5th' Final Project
 
-> Account for Project 
+> Introduction
 
 - Edit your Paper, Edit your Agenda !
 
-- You can see a various articles. Also, you can make a newspaper only for you. 
+- You can see lots of various articles, and also you can create a newspaper with your own taste. 
 
 > Use skill
 
