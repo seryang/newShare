@@ -8,7 +8,7 @@ newShare [newS + Share] Web Service
 
 - You can see lots of various articles, and also you can create a newspaper with your own taste. 
 
-> Use skill
+> Used skill
 
 - JAVA, Tomcat, Spring Framework, Mybatis Framework, JavaScript(jQuery/Ajax), JSP, HTML5/CSS3, CUBRID, Jsoup, JSON/GSON, javax-mail, bookblock, NAVER Open API, Bootstrap, jquery-UI, Maven, SVN
 
