@@ -10,7 +10,7 @@ newShare [newS + Share] Web Service
 
 > Used skill
 
-- JAVA, Tomcat, Spring Framework (ver 3.1.1), Mybatis Framework, JavaScript(jQuery/Ajax), JSP, HTML5/CSS3, CUBRID, Jsoup, JSON/GSON, javax-mail, bookblock, NAVER Open API, Bootstrap, jquery-UI, Maven, SVN
+- JAVA, Tomcat, Spring Framework (v 3.1.1), Mybatis Framework, JavaScript(jQuery/Ajax), JSP, HTML5/CSS3, CUBRID, Jsoup, JSON/GSON, javax-mail, bookblock, NAVER Open API, Bootstrap, jquery-UI, Maven, SVN
 
 > Project Member 
 
