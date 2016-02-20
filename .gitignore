@@ -10,9 +10,8 @@
 .idea/*
 .metadata
 .settings
-Cloud/*
+.clsspath
 .gradle
-*.DS_Store
 bin/**
 	 tmp/**
 	 tmp/**/*
