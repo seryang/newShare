@@ -22,7 +22,8 @@ public class SearchController {
 	@RequestMapping(value="/searchKeyword.do")
 	public String searchKeyword(@RequestParam("keyword")String keyword,Model model){
 		try {
-			keyword = new String(keyword.getBytes("8859_1"), "UTF-8");
+			System.out.println("searchKeyword? : " + keyword);
+//			keyword = new String(keyword.getBytes("8859_1"), "UTF-8");
 			model.addAttribute("keyword", keyword );
 			model.addAttribute("json", searchService.naverOpenAPI(keyword));
 		} catch(Exception e) {
