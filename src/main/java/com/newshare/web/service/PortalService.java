@@ -109,7 +109,7 @@ public class PortalService {
 				}
 			}
 		} else if (portal.equals("http://news.nate.com/")) {
-			temp3 = doc.getElementsByClass("mduSubjectContent");
+			temp3 = doc.getElementsByClass("mainContents");
 			temp1 = temp3.get(0);
 			temp2 = temp1.getElementsByTag("strong");
 			title = temp2.get(0).text();
